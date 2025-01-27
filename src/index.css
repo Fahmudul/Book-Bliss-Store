@@ -64,3 +64,6 @@
     @apply bg-background text-foreground;
   }
 }
+.footer_bg{
+  background: url("/public/assets/Footer.png");
+}
