@@ -4,8 +4,12 @@ import { NavLink, Navigate, useNavigate } from "react-router-dom";
 import { FaOpencart, FaUserCircle } from "react-icons/fa";
 import { MdFavorite, MdCompareArrows } from "react-icons/md";
 import { Button } from "antd";
+import { useAppDispatch, useAppSelector } from "../../Redux/hook";
+import { getUser, logOut } from "../../Redux/Features/Auth/authSlice";
 const Navbar = () => {
   const navigate = useNavigate();
+  const user = useAppSelector(getUser);
+  const dispatch = useAppDispatch();
   return (
     <div className="">
       <div className="h-24  flex justify-between lg:max-w-[80%] mx-auto items-center">
@@ -19,7 +23,13 @@ const Navbar = () => {
         </div>
         <div className="flex gap-3 items-center ">
           <FaUserCircle className="text-2xl" />
-          <Button onClick={() => navigate("/login")}>Login</Button>
+          <Button
+            onClick={() => {
+              return user ? dispatch(logOut()) : navigate("/login");
+            }}
+          >
+            {user ? "Logout" : "Login"}
+          </Button>
         </div>
       </div>
       <div className=" min-h-16 flex items-center bg-[#e12503]">

@@ -11,11 +11,7 @@ const DashboardLayout = () => {
     <Layout style={{ minHeight: "100vh" }}>
       <Sidebar />
       <Layout>
-        <Header style={{ padding: 0 }}>
-          <Button type="primary" onClick={() => dispatch(logOut())}>
-            Logout{" "}
-          </Button>
-        </Header>
+        <Header style={{ padding: 0 }} className="bg-black"></Header>
         <Content style={{ margin: "24px 16px 0" }}>
           <div
             style={{

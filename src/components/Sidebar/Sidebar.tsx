@@ -19,6 +19,7 @@ const Sidebar: React.FC = () => {
   return (
     <Sider
       breakpoint="lg"
+      className="bg-black"
       collapsedWidth="0"
       onBreakpoint={(broken) => {
         console.log(broken);
@@ -44,6 +45,7 @@ const Sidebar: React.FC = () => {
       <Menu
         theme="dark"
         mode="inline"
+        className="!bg-black "
         defaultSelectedKeys={[defaultKey || "dashboard"]}
         items={sideBarItems}
       />

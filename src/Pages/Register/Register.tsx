@@ -4,8 +4,9 @@ import CustomInput from "../../components/CustomForm/CustomInput";
 import { Button } from "antd";
 
 const Register = () => {
-  const onSubmit = (data) => {};
-  console.log(data);
+  const onSubmit = (data) => {
+    console.log(data);
+  };
   return (
     <CustomForm onSubmit={onSubmit}>
       <CustomInput name="email" label="Email" type="email" />
