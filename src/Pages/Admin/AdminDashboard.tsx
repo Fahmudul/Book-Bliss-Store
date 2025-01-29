@@ -1,6 +1,11 @@
+import ManageAdmin from "./AdminManagement";
 
 const AdminDashboard = () => {
-  return <div>this is admin dashboard</div>;
+  return (
+    <div>
+      <ManageAdmin />
+    </div>
+  );
 };
 
 export default AdminDashboard;

@@ -22,6 +22,12 @@ const bookMangementApi = baseApi.injectEndpoints({
         body: data,
       }),
     }),
+    getNumberOfCategories: builder.query({
+      query: () => ({
+        url: "/books/category",
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -29,4 +35,5 @@ export const {
   useGetAllBooksQuery,
   useGetSingleBookQuery,
   usePublishBookMutation,
+  useGetNumberOfCategoriesQuery
 } = bookMangementApi;

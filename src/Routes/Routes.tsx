@@ -1,21 +1,38 @@
 import { RouteObject, createBrowserRouter } from "react-router-dom";
-import App from "../App";
 import Register from "../Pages/Register/Register";
 import Login from "../Pages/Login/Login";
 import AdminRoutes from "./AdminRoutes";
-import MainLayout from "../components/Layout/MainLayout";
 import PublicRoute from "../components/RouteComponents/PublicRoute";
 import PrivateRoute from "../components/RouteComponents/PrivateRoute";
+import SingleBook from "../Pages/Books/Single Book/SingleBook";
+import DashboardLayout from "../components/Layout/DashboardLayout";
+import MainLayout from "../components/Layout/MainLayout";
+import Home from "../components/Home/Home";
+import AllBooks from "../Pages/Books/All Books/AllBooks";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: <MainLayout />,
+    children: [
+      {
+        index: true,
+        element: <Home />,
+      },
+      {
+        path: "all-books",
+        element: <AllBooks />,
+      },
+      {
+        path: "books/:1",
+        element: <SingleBook />,
+      },
+    ],
   },
   {
     path: "admin",
     element: (
       <PrivateRoute>
-        <MainLayout />
+        <DashboardLayout />
       </PrivateRoute>
     ),
     children: AdminRoutes as RouteObject[],
