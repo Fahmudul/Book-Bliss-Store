@@ -2,7 +2,7 @@ import { FaXTwitter, FaInstagram, FaPinterestP } from "react-icons/fa6";
 import { CiFacebook } from "react-icons/ci";
 const Footer = () => {
   return (
-    <div className="  h-[390px] bg-cover bg-center bg-no-repeat  flex  items-center w-full mx-auto bg-[url('/public/assets/Footer.png')] ">
+    <div className="  h-[390px] bg-cover bg-center bg-no-repeat  flex justify-center items-center w-full mx-auto bg-[url('/assets/Footer.png')]">
       <div className="w-[85%] mx-auto text-white flex flex-col gap-10">
         <div className="flex gap-8 justify-between">
           <div>

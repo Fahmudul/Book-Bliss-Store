@@ -2,6 +2,7 @@ import AdminDashboard from "../Pages/Admin/AdminDashboard";
 import AddBookToStore from "../Pages/Admin/AddBookToStore";
 import { TRoutes } from "../Types/global";
 import PrivateRoute from "../components/RouteComponents/PrivateRoute";
+import UpdateBook from "../Pages/Admin/UpdateBook";
 
 const AdminRoutes: TRoutes[] = [
   {
@@ -30,6 +31,14 @@ const AdminRoutes: TRoutes[] = [
     ),
     path: "add-book",
     name: "Add New Book",
+  },
+  {
+    element: (
+      <PrivateRoute>
+        <UpdateBook />
+      </PrivateRoute>
+    ),
+    path: "update-book/:id",
   },
 ];
 

@@ -1,17 +1,46 @@
-import { SetStateAction, useState } from "react";
+import { SetStateAction, useEffect, useRef, useState } from "react";
 import img1 from "/assets/img1.png";
 import img2 from "/assets/img2.png";
 import img3 from "/assets/img3.png";
 import img4 from "/assets/img4.png";
+import { useParams } from "react-router-dom";
+import { useGetSingleBookQuery } from "../../../Redux/Features/Admin/UserManagementApi/bookManagement.api";
+import { addToCart, getCart } from "../../../Redux/Features/Orders/cartSlice";
+import { useAppDispatch, useAppSelector } from "../../../Redux/hook";
 
 const SingleBook = () => {
   const [mainImage, setMainImage] = useState(img1);
-
   const thumbnails = [img1, img2, img3, img4];
+  const dispatch = useAppDispatch();
+  const { id } = useParams();
+  const cart = useAppSelector(getCart);
+  const quantityRef = useRef(0);
+  console.log(cart);
+  const { data: Book, isFetching, isLoading } = useGetSingleBookQuery(id);
+  const [bookData, setBookData] = useState(Book?.data);
+  const handleAddToCart = (data) => {
+    // console.log(quantityRef.current.value);
+    const quantity = quantityRef.current.value;
+    const productId = id;
+    const cartData = { quantity, productId };
+    // console.log(cartData);
+    dispatch(addToCart(cartData));
+  };
+  useEffect(() => {
+    if (Book) {
+      setBookData(Book?.data);
+    }
+  }, [Book]);
+  const { title, price, description, quantity, author, category } =
+    bookData || {};
+  // console.log(Book);
 
   const changeImage = (src: SetStateAction<string>) => {
     setMainImage(src);
   };
+  if (isFetching || isLoading) {
+    return <div>Loading...</div>;
+  }
   return (
     <section className="w-[80%] mx-auto">
       <div>
@@ -39,11 +68,13 @@ const SingleBook = () => {
 
             {/* Product Details */}
             <div className="w-full md:w-1/2 px-4">
-              <h2 className="text-3xl font-bold mb-2">When The Stars Align</h2>
+              <h2 className="text-3xl font-bold mb-2">{title}</h2>
               <p className="text-gray-600 mb-4">SKU: WH1000XM4</p>
               <div className="mb-4">
-                <span className="text-2xl font-bold mr-2">Tk 1,233.72</span>
-                <span className="text-gray-500 line-through">Tk 3,084.31</span>
+                <span className="text-2xl font-bold mr-2">Tk {price}</span>
+                <span className="text-gray-500 line-through">
+                  Tk {price + 5}
+                </span>
               </div>
               <div className="flex items-center mb-4">
                 {[...Array(5)].map((_, i) => (
@@ -63,21 +94,7 @@ const SingleBook = () => {
                 ))}
                 <span className="ml-2 text-gray-600">4.5 (120 reviews)</span>
               </div>
-              <p className="text-gray-700 mb-6">
-                About Author: This book's author, John, is one of the most
-                popular writers in American history. He was California-born but
-                attended school in New York. He attended Harvard University
-                to...
-              </p>
-
-              <div className="mb-6">
-                <h3 className="text-lg font-semibold mb-2">Color:</h3>
-                <div className="flex space-x-2">
-                  <button className="w-8 h-8 bg-black rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"></button>
-                  <button className="w-8 h-8 bg-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300"></button>
-                  <button className="w-8 h-8 bg-blue-500 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"></button>
-                </div>
-              </div>
+              <p className="text-gray-700 mb-6">{description}</p>
 
               <div className="mb-6">
                 <label
@@ -88,16 +105,23 @@ const SingleBook = () => {
                 </label>
                 <input
                   type="number"
-                  id="quantity"
                   name="quantity"
+                  value={1}
+                  ref={quantityRef}
                   min="1"
-                  defaultValue="1"
+                  defaultValue={1}
                   className="w-12 text-center rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                 />
               </div>
+              <span className="font-bold ">
+                Only <span className="text-red-500">{quantity}</span> left
+              </span>
 
-              <div className="flex space-x-4 mb-6">
-                <button className="bg-[#E12503] flex gap-2 items-center text-white px-10 py-2 ">
+              <div className="flex space-x-4 mb-6 mt-3">
+                <button
+                  className="bg-[#E12503] flex gap-2 items-center text-white px-10 py-2 "
+                  onClick={handleAddToCart}
+                >
                   Add to Cart
                 </button>
                 <button className="bg-black flex gap-2 items-center text-white px-10 py-2 hover:bg-[#E12503] ">
@@ -109,36 +133,16 @@ const SingleBook = () => {
                 <h3 className="text-xl font-bold mb-2">Key Features:</h3>
                 <ul className="list-disc list-inside text-gray-700 space-y-2">
                   <li className="flex items-center gap-1">
-                    <span className="font-bold text-black">Pages:</span>
-                    <span>250 Pages</span>
-                  </li>
-                  <li className="flex items-center gap-1">
                     <span className="font-bold text-black">Author:</span>
-                    <span>John</span>
+                    <span>{author}</span>
                   </li>
                   <li className="flex items-center gap-1">
-                    <span className="font-bold text-black">Publisher:</span>
-                    <span>Shopify Themes</span>
-                  </li>
-                  <li className="flex items-center gap-1">
-                    <span className="font-bold text-black">ISBN:</span>
-                    <span>00589</span>
-                  </li>
-                  <li className="flex items-center gap-1">
-                    <span className="font-bold text-black">Genre:</span>
-                    <span>Literary Fiction, Romance, Thriller</span>
+                    <span className="font-bold text-black">Category:</span>
+                    <span>{category}</span>
                   </li>
                   <li className="flex items-center gap-1">
                     <span className="font-bold text-black">Language:</span>
                     <span>English</span>
-                  </li>
-                  <li className="flex items-center gap-1">
-                    <span className="font-bold text-black">Reading Age:</span>
-                    <span>Good for 10+</span>
-                  </li>
-                  <li className="flex items-center gap-1">
-                    <span className="font-bold text-black">Dimensions:</span>
-                    <span>6.2 x 1.2 x 9.7 (inches)</span>
                   </li>
                 </ul>
               </div>

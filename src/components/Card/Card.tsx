@@ -2,9 +2,10 @@ import img1 from "/assets/img1.png";
 import { FaShoppingCart } from "react-icons/fa";
 import { FaRegEye } from "react-icons/fa6";
 import { GiSelfLove } from "react-icons/gi";
-import { Link, Links, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-const Card = () => {
+const Card = ({ book }) => {
+  const { author, title, price, _id } = book;
   const navigate = useNavigate();
   return (
     <div className="group relative flex justify-center items-center flex-col">
@@ -23,7 +24,7 @@ const Card = () => {
             size={35}
             className="text-3xl text-white bg-[#E12503] p-2 rounded-full shadow-md cursor-pointer"
           />
-          <Link to={"/"}>
+          <Link to={`/books/${_id}`}>
             <FaRegEye
               size={35}
               title="View Product"
@@ -33,9 +34,9 @@ const Card = () => {
         </div>
       </div>
       <div className="text-center space-y-2 mt-5">
-        <h2 className="text-xl text-[#888888] m-0">Sage Isaias</h2>
-        <p className="text-2xl font-medium m-0">Girls at the Golden City</p>
-        <p className="text-xl text-[#888888] m-0">Tk 1,480.47</p>
+        <h2 className="text-xl text-[#888888] m-0">{author}</h2>
+        <p className="text-2xl font-medium m-0">{title}</p>
+        <p className="text-xl text-[#888888] m-0">${price}</p>
       </div>
     </div>
   );

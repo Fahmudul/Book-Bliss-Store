@@ -3,7 +3,7 @@ import React from "react";
 const Banner = () => {
   return (
     <div className="h-[600px] w-full">
-      <div className="h-[100%] w-full  bg-[url(/public/assets/Banner.png)] bg-cover flex items-center  bg-center bg-no-repeat">
+      <div className="h-[100%] w-full  bg-[url(/assets/Banner.png)] bg-cover flex items-center  bg-center bg-no-repeat">
         <div className="h-[450px] w-[80%] mx-auto flex items-center">
           <div className="w-[45%]  h-[300px]">
             <h2 className="text-3xl font-semibold">Year end sale</h2>
