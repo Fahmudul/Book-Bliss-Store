@@ -1,8 +1,10 @@
 import { Button } from "antd";
 import Card from "../Card/Card";
 import { Link } from "react-router-dom";
+import { useGetAllBooksQuery } from "../../Redux/Features/Admin/UserManagementApi/bookManagement.api";
 
 const NewArrival = () => {
+  const { data: AllBooks } = useGetAllBooksQuery({ limit: 8 });
   return (
     <section className="my-14 px-8 w-[90%] mx-auto">
       <div className="flex justify-center items-center flex-col gap-3">
@@ -28,14 +30,9 @@ const NewArrival = () => {
       </div>
       <div className="grid grid-cols-4 gap-x-6 gap-y-8">
         {/* Card 1 */}
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
+        {AllBooks?.data?.map((book) => (
+          <Card book={book} />
+        ))}
       </div>
       <div className="flex justify-center items-center my-5">
         <Link to="/all-books">

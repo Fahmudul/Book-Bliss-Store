@@ -9,6 +9,8 @@ import DashboardLayout from "../components/Layout/DashboardLayout";
 import MainLayout from "../components/Layout/MainLayout";
 import Home from "../components/Home/Home";
 import AllBooks from "../Pages/Books/All Books/AllBooks";
+import CheckoutPage from "../Pages/CheckOut/CheckOut";
+import OrderConfirmation from "../Pages/OrderConfirmation/OrderConfirmation";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -25,6 +27,14 @@ const router = createBrowserRouter([
       {
         path: "books/:id",
         element: <SingleBook />,
+      },
+      {
+        path: "checkout",
+        element: <CheckoutPage />,
+      },
+      {
+        path: "order-confirmation",
+        element: <OrderConfirmation />,
       },
     ],
   },

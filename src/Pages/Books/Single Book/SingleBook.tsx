@@ -18,14 +18,7 @@ const SingleBook = () => {
   console.log(cart);
   const { data: Book, isFetching, isLoading } = useGetSingleBookQuery(id);
   const [bookData, setBookData] = useState(Book?.data);
-  const handleAddToCart = (data) => {
-    // console.log(quantityRef.current.value);
-    const quantity = quantityRef.current.value;
-    const productId = id;
-    const cartData = { quantity, productId };
-    // console.log(cartData);
-    dispatch(addToCart(cartData));
-  };
+
   useEffect(() => {
     if (Book) {
       setBookData(Book?.data);
@@ -34,7 +27,19 @@ const SingleBook = () => {
   const { title, price, description, quantity, author, category } =
     bookData || {};
   // console.log(Book);
-
+  const handleAddToCart = (data) => {
+    // console.log(quantityRef.current.value);
+    const quantity = Number(quantityRef.current?.value) || 1;
+    const productId = id as string;
+    const cartData = {
+      quantity: quantity as number,
+      productId: productId,
+      totalPrice: quantity * price,
+      title,
+    };
+    // console.log(cartData);
+    dispatch(addToCart(cartData));
+  };
   const changeImage = (src: SetStateAction<string>) => {
     setMainImage(src);
   };
@@ -73,7 +78,7 @@ const SingleBook = () => {
               <div className="mb-4">
                 <span className="text-2xl font-bold mr-2">Tk {price}</span>
                 <span className="text-gray-500 line-through">
-                  Tk {price + 5}
+                  Tk {Number(price) + 5}
                 </span>
               </div>
               <div className="flex items-center mb-4">
@@ -106,7 +111,6 @@ const SingleBook = () => {
                 <input
                   type="number"
                   name="quantity"
-                  value={1}
                   ref={quantityRef}
                   min="1"
                   defaultValue={1}

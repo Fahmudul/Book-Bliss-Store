@@ -1,4 +1,6 @@
 import { baseApi } from "../../api/baseApi";
+import { useAppSelector } from "../../hook";
+import { getCart } from "./cartSlice";
 
 const orderApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -22,6 +24,15 @@ const orderApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Orders"],
     }),
+    createOrder: builder.mutation({
+      query: (data) => {
+        return {
+          url: "/order/create-order",
+          method: "POST",
+          body: data,
+        };
+      },
+    }),
   }),
 });
 
@@ -29,4 +40,5 @@ export const {
   useGetAllOrdersQuery,
   useUpdateOrderStatusMutation,
   useVerifyOrderMutation,
+  useCreateOrderMutation,
 } = orderApi;

@@ -1,4 +1,4 @@
-import { Button, Checkbox, CheckboxProps, Select } from "antd";
+import { Button, Checkbox, CheckboxProps, Popconfirm, Select } from "antd";
 import {
   useGetAllBooksQuery,
   useGetNumberOfCategoriesQuery,
@@ -142,7 +142,7 @@ const AllBooks = () => {
             <div className="mx-3 ">
               <Search
                 placeholder="Search Book e.g title"
-                onSearch={(value) => setParams({ searchTerms: value })}
+                onSearch={(value) => setParams({ searchTerm: value })}
                 style={{ width: 200 }}
               />
             </div>
