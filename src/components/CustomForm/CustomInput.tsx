@@ -5,18 +5,27 @@ const CustomInput = ({
   name,
   label,
   type,
+  placeholderTitle,
+  className,
 }: {
   name: string;
-  label: string;
+  label?: string;
   type: string;
+  placeholderTitle?: string;
+  className?: string;
 }) => {
   return (
     <Controller
       name={name}
       render={({ field }) => (
         <>
-          <label htmlFor={name}>{label}</label>
-          <Input {...field} placeholder={`Enter ${label}`} type={type} />
+          {label && <label htmlFor={name}>{label}</label>}
+          <Input
+            {...field}
+            placeholder={`Enter ${label || placeholderTitle}`}
+            type={type}
+            className={className}
+          />
         </>
       )}
     />

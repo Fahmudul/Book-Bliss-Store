@@ -8,16 +8,19 @@ import {
 type TFormProps = {
   onSubmit: SubmitHandler<FieldValues>;
   children: ReactNode;
+  className?: string;
 };
-const CustomForm = ({ children, onSubmit }: TFormProps) => {
+const CustomForm = ({ children, onSubmit, className }: TFormProps) => {
   const methods = useForm();
   const handleSubmit: SubmitHandler<FieldValues> = (data) => {
     onSubmit(data);
-    methods.reset()
+    methods.reset();
   };
   return (
     <FormProvider {...methods}>
-      <form onSubmit={methods.handleSubmit(handleSubmit)}>{children}</form>
+      <form onSubmit={methods.handleSubmit(handleSubmit)} className={className}>
+        {children}
+      </form>
     </FormProvider>
   );
 };

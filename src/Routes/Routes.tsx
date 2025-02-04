@@ -11,10 +11,14 @@ import Home from "../components/Home/Home";
 import AllBooks from "../Pages/Books/All Books/AllBooks";
 import CheckoutPage from "../Pages/CheckOut/CheckOut";
 import OrderConfirmation from "../Pages/OrderConfirmation/OrderConfirmation";
+import UserDashboard from "../Pages/User/UserDashboard";
+import About from "../Pages/About/About";
+import NotFoundPage from "../components/404/NotFound";
 const router = createBrowserRouter([
   {
     path: "/",
     element: <MainLayout />,
+    errorElement: <NotFoundPage />,
     children: [
       {
         index: true,
@@ -30,11 +34,39 @@ const router = createBrowserRouter([
       },
       {
         path: "checkout",
-        element: <CheckoutPage />,
+        element: (
+          <PrivateRoute>
+            <CheckoutPage />
+          </PrivateRoute>
+        ),
       },
       {
         path: "order-confirmation",
-        element: <OrderConfirmation />,
+        element: (
+          <PrivateRoute>
+            <OrderConfirmation />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "about",
+        element: <About />,
+      },
+      {
+        path: "/register",
+        element: (
+          <PublicRoute>
+            <Register />
+          </PublicRoute>
+        ),
+      },
+      {
+        path: "/login",
+        element: (
+          <PublicRoute>
+            <Login />
+          </PublicRoute>
+        ),
       },
     ],
   },
@@ -47,17 +79,20 @@ const router = createBrowserRouter([
     ),
     children: AdminRoutes as RouteObject[],
   },
+
   {
-    path: "/register",
-    element: <Register />,
-  },
-  {
-    path: "/login",
+    path: "user",
     element: (
-      <PublicRoute>
-        <Login />
-      </PublicRoute>
+      <PrivateRoute>
+        <DashboardLayout />
+      </PrivateRoute>
     ),
+    children: [
+      {
+        path: "dashboard",
+        element: <UserDashboard />,
+      },
+    ],
   },
 ]);
 

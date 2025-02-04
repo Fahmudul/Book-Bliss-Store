@@ -5,7 +5,6 @@ import { Navigate } from "react-router-dom";
 
 const PublicRoute = ({ children }: { children: React.ReactNode }) => {
   const user = useAppSelector(getUser);
-  // console.log(user);
   if (user) {
     return <Navigate to={`/${user?.role}/dashboard`} />;
   }

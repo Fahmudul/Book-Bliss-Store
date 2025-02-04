@@ -1,20 +1,18 @@
 import { NavLink, useNavigate } from "react-router-dom";
-// import DrawerComponent from "../Drawer/Drawer";
-import { FaOpencart, FaUserCircle } from "react-icons/fa";
+import { FaOpencart } from "react-icons/fa";
 import { MdFavorite, MdCompareArrows } from "react-icons/md";
-import { Button, Card, Popconfirm, PopconfirmProps, message } from "antd";
-import { useAppDispatch, useAppSelector } from "../../Redux/hook";
-import { getUser, logOut } from "../../Redux/Features/Auth/authSlice";
-import { getCart } from "../../Redux/Features/Orders/cartSlice";
-import { useState } from "react";
+import { Popconfirm, PopconfirmProps, message } from "antd";
+import {  useAppSelector } from "../../Redux/hook";
+import { getUser } from "../../Redux/Features/Auth/authSlice";
+import { ICart, getCart } from "../../Redux/Features/Orders/cartSlice";
+import CustomBtn from "../CustomForm/CustomBtn";
+import UserDropdown from "../UserDropdown/UserDropdown";
 const Navbar = () => {
   const navigate = useNavigate();
   const user = useAppSelector(getUser);
-  const dispatch = useAppDispatch();
   const { items } = useAppSelector(getCart);
   // console.log(items);
-  const [showCartModal, setShowCartModal] = useState(false);
-  const handleCartModal = () => {};
+
   const cancel: PopconfirmProps["onCancel"] = (e) => {
     console.log(e);
     message.error("Click on No");
@@ -33,7 +31,9 @@ const Navbar = () => {
                   {items.map((item, idx) => (
                     <CartModal key={idx} product={item} />
                   ))}
-                  <div className="w-full mt-2 flex justify-end">Total:{totalPrice}</div>
+                  <div className="w-full mt-2 flex justify-end">
+                    Total:{Number(totalPrice).toFixed()}
+                  </div>
                 </div>
               }
               onCancel={cancel}
@@ -49,21 +49,25 @@ const Navbar = () => {
               {items.length}
             </span>
           </div>
-          <MdFavorite className="text-2xl hover:text-red-500 transition-all duration-300" />
-          <MdCompareArrows className="text-2xl hover:text-red-500 transition-all duration-300" />
+          <MdFavorite className="text-2xl hover:text-red-500 transition-all duration-300 hidden md:block" />
+          <MdCompareArrows className="text-2xl hover:text-red-500 transition-all duration-300 hidden md:block" />
         </div>
         <div className="text-2xl font-bold">
           BOOK <span className="text-[#e12503]">BLISS</span>
         </div>
         <div className="flex gap-3 items-center ">
-          <FaUserCircle className="text-2xl" />
-          <Button
-            onClick={() => {
-              return user ? dispatch(logOut()) : navigate("/login");
-            }}
-          >
-            {user ? "Logout" : "Login"}
-          </Button>
+          {user ? (
+            <>
+              <UserDropdown />
+            </>
+          ) : (
+            <CustomBtn
+              ButtonText="Log In"
+              onClick={() => {
+                return navigate("/login");
+              }}
+            />
+          )}
         </div>
       </div>
       <div className=" min-h-16 flex items-center bg-[#e12503]">
@@ -103,7 +107,7 @@ const Navbar = () => {
 };
 
 export default Navbar;
-export const CartModal = ({ product }) => {
+export const CartModal = ({ product }: { product: ICart }) => {
   return (
     <div className="flex items-center  gap-4 mt-1">
       <img

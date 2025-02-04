@@ -1,5 +1,5 @@
 import { Button, Select } from "antd";
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   useGetAllUsersQuery,
   useDeactivateUserMutation,
@@ -15,8 +15,9 @@ import {
   useUpdateOrderStatusMutation,
   useVerifyOrderMutation,
 } from "../../Redux/Features/Orders/Order.api";
-import { IResponseBook, TransactionDetails } from "../../Types/global";
+import { IResponseBook, TransactionDetails, User } from "../../Types/global";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 const ManageAdmin = () => {
   const [activeTab, setActiveTab] = useState("manageUser");
   const { data: Users } = useGetAllUsersQuery(undefined);
@@ -32,10 +33,20 @@ const ManageAdmin = () => {
   const { data: Books } = useGetAllBooksQuery(undefined, {
     skip: activeTab !== "manageProducts",
   });
+  const tabs = [
+    { id: "manageUser", label: "Manage User", count: Users?.data?.length || 0 },
+    {
+      id: "manageProducts",
+      label: "Manage Products",
+      count: Books?.data?.length || 0,
+    },
+    {
+      id: "manageOrder",
+      label: "Manage Order",
+      count: Orders?.data?.length || 0,
+    },
+  ];
 
-  const handleTabClick = (tabId: React.SetStateAction<string>) => {
-    setActiveTab(tabId);
-  };
   console.log(Books);
   const handleAction = async (data: string) => {
     const [_id, actionType] = data.split("-");
@@ -50,6 +61,7 @@ const ManageAdmin = () => {
   const handleChangeOrderStatus = async (data: string) => {
     // console.log(data);
     const [_id, status] = data.split("-");
+    const toastId = toast.loading("Updating status...");
     // console.log(_id, actionType);
     let result;
     if (status !== "Paid") {
@@ -58,46 +70,32 @@ const ManageAdmin = () => {
       const orderId = _id;
       result = await verifyOrder(orderId);
     }
+    toast.success("Status updated successfully", { id: toastId });
     console.log(result);
   };
-  console.log(Orders);
   return (
-    <section className="mt-3 ml-3">
-      <ul className="flex gap-3 bg-gray-100 rounded-xl p-1 overflow-hidden">
-        <li
-          id="manageUser"
-          className={`tab ${
-            activeTab === "manageUser"
-              ? "text-white font-bold bg-[#1677FF]"
-              : "text-gray-600 font-semibold"
-          } rounded-xl text-center text-sm py-2.5 px-4 tracking-wide cursor-pointer`}
-          onClick={() => handleTabClick("manageUser")}
-        >
-          Manage User
-        </li>
-        <li
-          id="manageProducts"
-          className={`tab ${
-            activeTab === "manageProducts"
-              ? "text-white font-bold bg-[#1677FF]"
-              : "text-gray-600 font-semibold"
-          } rounded-xl text-center text-sm py-2.5 px-4 tracking-wide cursor-pointer`}
-          onClick={() => handleTabClick("manageProducts")}
-        >
-          Manage Products
-        </li>
-        <li
-          id="manageOrder"
-          className={`tab ${
-            activeTab === "manageOrder"
-              ? "text-white font-bold bg-[#1677FF]"
-              : "text-gray-600 font-semibold"
-          } rounded-xl text-center text-sm py-2.5 px-4 tracking-wide cursor-pointer`}
-          onClick={() => handleTabClick("manageOrder")}
-        >
-          Manage Order
-        </li>
-      </ul>
+    <section className=" lg:ml-3">
+      <div className="lg:px-8 lg:py-6">
+        <div className="space-x-1  rounded-xl p-1">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`
+                flex-1 px-4 py-2.5 text-sm font-medium duration-500 
+                ${
+                  activeTab === tab.id
+                    ? "bg-transparent border-b-2 border-[#e12503] text-[#e12503] shadow-sm"
+                    : "text-gray-600 hover:text-gray-800 hover:bg-gray-200 hover:rounded-md"
+                }
+                transition-all duration-200
+              `}
+            >
+              {tab.label} ({tab.count})
+            </button>
+          ))}
+        </div>
+      </div>
       {/* Manage User */}
       <div
         className={`tab-content bg-white px-8 py-4 rounded-md   mt-8 ${
@@ -105,7 +103,9 @@ const ManageAdmin = () => {
         }`}
       >
         <div className="container px-4 mx-auto">
-          <p className="text-[18px] mb-4">Manage User (15)</p>
+          <p className="text-[18px] mb-4">
+            Manage User ({Users?.data?.length})
+          </p>
           <div className="flex flex-col">
             <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
               <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
@@ -137,7 +137,7 @@ const ManageAdmin = () => {
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">
-                      {Users?.data?.map((user) => (
+                      {Users?.data?.map((user: User) => (
                         <tr key={user.id}>
                           <td className="px-4 py-4 text-sm font-medium whitespace-nowrap">
                             <div
@@ -216,7 +216,9 @@ const ManageAdmin = () => {
         }`}
       >
         <div className="container px-4 mx-auto">
-          <p className="text-[18px] mb-4">Manage Products (11)</p>
+          <p className="text-[18px] mb-4">
+            Manage Products ({Books?.data?.length})
+          </p>
           <div className="flex flex-col">
             <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
               <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
@@ -319,7 +321,9 @@ const ManageAdmin = () => {
         }`}
       >
         <div className="container px-4 mx-auto">
-          <p className="text-[18px] mb-4">Manage Order (20)</p>
+          <p className="text-[18px] mb-4">
+            Manage Order ({Orders?.data?.length})
+          </p>
           <div className="flex flex-col">
             <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
               <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
@@ -367,7 +371,7 @@ const ManageAdmin = () => {
                               </div>
                             </td>
                             <td className="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
-                              {user.email}
+                              {user?.email}
                             </td>
                             <td className="px-4 py-4 text-sm font-medium whitespace-nowrap">
                               <div

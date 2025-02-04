@@ -9,16 +9,45 @@ export type TRoutes = {
 };
 
 export interface TransactionDetails {
-  user: string;
+  user: { email: string };
   _id: string;
   status: string;
   totalPrice: number;
   createdAt: Date;
   transaction?: {
-    method: string;
     id: string;
+    method: string;
     transactionStatus: string;
   };
+}
+export interface User {
+  id: string;
+  activity: string;
+  createdAt: string;
+  name: string;
+  email: string;
+  role: string;
+  _id: string;
+}
+export interface UserToken {
+  id: string;
+  role: string;
+  email: string;
+  iat: number;
+  exp: number;
+  token: string;
+}
+export interface ICartModal {
+  title: string;
+  quantity: number;
+  totalPrice: number;
+}
+
+export interface IBook {
+  author: string;
+  title: string;
+  price: number;
+  _id: string;
 }
 
 export interface IResponseBook {

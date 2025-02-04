@@ -1,6 +1,4 @@
 import { baseApi } from "../../api/baseApi";
-import { useAppSelector } from "../../hook";
-import { getCart } from "./cartSlice";
 
 const orderApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -33,6 +31,13 @@ const orderApi = baseApi.injectEndpoints({
         };
       },
     }),
+    getCustomerOrders: builder.query({
+      query: () => ({
+        url: `/order/get-customer-orders`,
+        method: "GET",
+      }),
+      providesTags: ["Orders"],
+    }),
   }),
 });
 
@@ -41,4 +46,5 @@ export const {
   useUpdateOrderStatusMutation,
   useVerifyOrderMutation,
   useCreateOrderMutation,
+  useGetCustomerOrdersQuery,
 } = orderApi;

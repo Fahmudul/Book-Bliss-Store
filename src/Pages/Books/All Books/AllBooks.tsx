@@ -1,13 +1,14 @@
-import { Button, Checkbox, CheckboxProps, Popconfirm, Select } from "antd";
+import { Checkbox, CheckboxProps, Select } from "antd";
 import {
   useGetAllBooksQuery,
+  useGetAuthorsQuery,
   useGetNumberOfCategoriesQuery,
 } from "../../../Redux/Features/Admin/UserManagementApi/bookManagement.api";
-import { PiDotsNineFill } from "react-icons/pi";
-import { RiMenu2Fill } from "react-icons/ri";
 import Card from "../../../components/Card/Card";
 import { useState, useEffect } from "react";
 import Search from "antd/es/input/Search";
+import { IResponseBook } from "../../../Types/global";
+import CardSkeleton from "../../../components/CardSkeleton/CardSkeleton";
 interface IParams {
   [key: string]: string[] | undefined | string;
 }
@@ -15,14 +16,7 @@ const AllBooks = () => {
   const [params, setParams] = useState<IParams>({});
   const { data: Categories } = useGetNumberOfCategoriesQuery(undefined);
   const { data: AllBooks, refetch } = useGetAllBooksQuery(params);
-  const [authorList, setAuthorList] = useState<string[]>([]);
-  useEffect(() => {
-    if (AllBooks?.data) {
-      let authorListFromBookList = AllBooks.data.map((book) => book?.author);
-      authorListFromBookList = new Set(authorListFromBookList);
-      setAuthorList(Array.from(authorListFromBookList));
-    }
-  }, []);
+  const { data: authorList } = useGetAuthorsQuery(undefined);
   console.log(authorList);
   useEffect(() => {
     refetch();
@@ -40,33 +34,36 @@ const AllBooks = () => {
           maxPrice: max,
         }));
       } else {
-        setParams((prev) => ({
-          ...prev,
-          minPrice: undefined,
-          maxPrice: undefined,
-        }));
+        const removeMinMax = { ...params };
+        delete removeMinMax.minPrice;
+        delete removeMinMax.maxPrice;
+        setParams(removeMinMax);
       }
     }
     setParams((prev) => {
-      const newParams = { ...prev };
+      const newParams: { [key: string]: string | string[] | undefined } = {
+        ...prev,
+      };
 
       if (e.target.checked && name !== "range") {
         newParams[name] = [...(newParams[name] || []), value];
       } else {
-        if (name !== "range") {
-          newParams[name] = (newParams[name] || []).filter(
-            (item) => item !== value
+        if (name !== "range" && Array.isArray(newParams[name])) {
+          newParams[name] = Array.from(newParams[name] || [])?.filter(
+            (item: string) => item !== value
           );
-          if (newParams[name].length === 0) {
+          if (newParams[name]?.length === 0) {
             delete newParams[name];
           }
+        } else if (name !== "range" && !Array.isArray(newParams[name])) {
+          newParams[name] = [value];
         }
       }
 
       return { ...newParams };
     });
   };
-
+  console.log(params);
   return (
     <div className="w-[90%] mx-auto p-6">
       <h1 className="text-center text-3xl font-bold my-5">All Collection</h1>
@@ -111,9 +108,13 @@ const AllBooks = () => {
             <div className="flex flex-col gap-2">
               <h4 className="text-lg font-semibold">Author</h4>
               <div className="flex flex-col gap-2 px-2">
-                {authorList?.map((author) => (
-                  <Checkbox onChange={onChange} value={"author-" + author}>
-                    {author}
+                {authorList?.data?.map((author: { _id: string }) => (
+                  <Checkbox
+                    key={author._id}
+                    onChange={onChange}
+                    value={"author-" + author._id}
+                  >
+                    {author._id}
                   </Checkbox>
                 ))}
               </div>
@@ -123,7 +124,7 @@ const AllBooks = () => {
             <div className="flex flex-col gap-2">
               <h4 className="text-lg font-semibold">Category</h4>
               <div className="flex flex-col gap-2 px-2">
-                {Categories?.data?.map((category) => (
+                {Categories?.data?.map((category: { _id: string }) => (
                   <Checkbox
                     key={category._id}
                     onChange={onChange}
@@ -155,13 +156,21 @@ const AllBooks = () => {
                   { value: "l-t-h", label: "Low to High" },
                 ]}
               />
-              <span>22 Books</span>
+              <span>{AllBooks?.data?.length} Books</span>
             </div>
           </div>
           <div className="grid grid-cols-3 gap-3 my-4">
-            {AllBooks?.data?.map((book) => (
-              <Card key={book.id} book={book} />
-            ))}
+            {AllBooks?.data?.length > 0 ? (
+              AllBooks?.data?.map((book: IResponseBook) => (
+                <Card key={book._id} book={book} />
+              ))
+            ) : (
+              <>
+                <CardSkeleton />
+                <CardSkeleton />
+                <CardSkeleton />
+              </>
+            )}
           </div>
         </div>
       </div>

@@ -1,24 +1,18 @@
 import { Card, Button, Table } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../Redux/hook";
-import { clearCart, getCart } from "../../Redux/Features/Orders/cartSlice";
+import { clearCart } from "../../Redux/Features/Orders/cartSlice";
 import { motion } from "framer-motion";
-import { getUser } from "../../Redux/Features/Auth/authSlice";
 
 const OrderConfirmation: React.FC = () => {
   const dispatch = useAppDispatch();
-  dispatch(clearCart([]));
+  dispatch(clearCart());
   const navigate = useNavigate();
   const items = useAppSelector((state) => state.cart.orderedItems);
   const orderId = useAppSelector((state) => state.cart.orderId);
 
-  // Dummy order ID (Replace with actual order ID from API)
-  // const orderId = "ORD-12345678";
-
-  // Calculate Total Price
   const totalPrice = items.reduce((sum, item) => sum + item.totalPrice, 0);
 
-  // Define Table Columns
   const columns = [
     {
       title: "Image",
@@ -95,7 +89,11 @@ const OrderConfirmation: React.FC = () => {
               Total:{" "}
               <span className="text-green-600">${totalPrice.toFixed(2)}</span>
             </h2>
-            <Button type="primary" size="large" onClick={() => navigate("/")}>
+            <Button
+              className="custom-btn"
+              size="large"
+              onClick={() => navigate("/")}
+            >
               Back to Home
             </Button>
           </div>

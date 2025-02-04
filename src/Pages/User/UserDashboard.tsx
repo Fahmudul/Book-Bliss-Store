@@ -1,7 +1,11 @@
-import React from "react";
+import UserManagement from "./UserManagement";
 
 const UserDashboard = () => {
-  return <div>this is user dashboard</div>;
+  return (
+    <div>
+      <UserManagement />
+    </div>
+  );
 };
 
 export default UserDashboard;

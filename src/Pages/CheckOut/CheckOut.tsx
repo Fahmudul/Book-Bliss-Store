@@ -1,28 +1,18 @@
 import { Table, Button, Card } from "antd";
-import { useState } from "react";
 import { useAppSelector } from "../../Redux/hook";
 import {
   addToOrderedList,
   getCart,
 } from "../../Redux/Features/Orders/cartSlice";
-import { useNavigate } from "react-router-dom";
 import { useCreateOrderMutation } from "../../Redux/Features/Orders/Order.api";
 import { useDispatch } from "react-redux";
-
-interface Product {
-  id: number;
-  name: string;
-  image: string;
-  quantity: number;
-  price: number;
-}
+import { ICartModal } from "../../Types/global";
 
 const CheckoutPage: React.FC = () => {
   const { items } = useAppSelector(getCart);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const dispatch = useDispatch();
   const [createOrder] = useCreateOrderMutation(undefined);
-  // console.log(items);
 
   const totalPrice = items.reduce((sum, item) => sum + item.totalPrice, 0);
 
@@ -49,12 +39,13 @@ const CheckoutPage: React.FC = () => {
       title: "Price",
       dataIndex: "totalPrice",
       key: "price",
-      render: (item, record) => `$${record.totalPrice / record.quantity}`,
+      render: (_item: string, record: ICartModal) =>
+        `$${Number(record.totalPrice) / Number(record.quantity)}`,
     },
     {
       title: "Total",
       key: "total",
-      render: (item) => `$${item.totalPrice.toFixed(2)}`,
+      render: (item: ICartModal) => `$${item.totalPrice}`,
     },
   ];
 
@@ -95,7 +86,7 @@ const CheckoutPage: React.FC = () => {
           <h2 className="text-xl font-semibold">
             Total: ${totalPrice.toFixed(2)}
           </h2>
-          <Button type="primary" size="large" onClick={handleCheckout}>
+          <Button className="custom-btn" size="large" onClick={handleCheckout}>
             Order Now
           </Button>
         </div>

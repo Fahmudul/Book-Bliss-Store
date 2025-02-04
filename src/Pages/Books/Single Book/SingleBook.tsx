@@ -1,4 +1,4 @@
-import { SetStateAction, useEffect, useRef, useState } from "react";
+import { LegacyRef, SetStateAction, useEffect, useRef, useState } from "react";
 import img1 from "/assets/img1.png";
 import img2 from "/assets/img2.png";
 import img3 from "/assets/img3.png";
@@ -7,6 +7,8 @@ import { useParams } from "react-router-dom";
 import { useGetSingleBookQuery } from "../../../Redux/Features/Admin/UserManagementApi/bookManagement.api";
 import { addToCart, getCart } from "../../../Redux/Features/Orders/cartSlice";
 import { useAppDispatch, useAppSelector } from "../../../Redux/hook";
+import { FieldValues, SubmitHandler } from "react-hook-form";
+import BookDetailsSkeleton from "../../../components/BookDetailsSkeleton/BookDetailsSkeleton";
 
 const SingleBook = () => {
   const [mainImage, setMainImage] = useState(img1);
@@ -14,7 +16,7 @@ const SingleBook = () => {
   const dispatch = useAppDispatch();
   const { id } = useParams();
   const cart = useAppSelector(getCart);
-  const quantityRef = useRef(0);
+  const quantityRef = useRef<HTMLInputElement>(null);
   console.log(cart);
   const { data: Book, isFetching, isLoading } = useGetSingleBookQuery(id);
   const [bookData, setBookData] = useState(Book?.data);
@@ -27,7 +29,7 @@ const SingleBook = () => {
   const { title, price, description, quantity, author, category } =
     bookData || {};
   // console.log(Book);
-  const handleAddToCart = (data) => {
+  const handleAddToCart: SubmitHandler<FieldValues> = () => {
     // console.log(quantityRef.current.value);
     const quantity = Number(quantityRef.current?.value) || 1;
     const productId = id as string;
@@ -43,9 +45,13 @@ const SingleBook = () => {
   const changeImage = (src: SetStateAction<string>) => {
     setMainImage(src);
   };
-  if (isFetching || isLoading) {
-    return <div>Loading...</div>;
-  }
+
+  if (isLoading || isFetching)
+    return (
+      <>
+        <BookDetailsSkeleton />
+      </>
+    );
   return (
     <section className="w-[80%] mx-auto">
       <div>
@@ -111,7 +117,11 @@ const SingleBook = () => {
                 <input
                   type="number"
                   name="quantity"
-                  ref={quantityRef}
+                  ref={
+                    quantityRef as unknown as
+                      | LegacyRef<HTMLInputElement>
+                      | undefined
+                  }
                   min="1"
                   defaultValue={1}
                   className="w-12 text-center rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
@@ -123,8 +133,11 @@ const SingleBook = () => {
 
               <div className="flex space-x-4 mb-6 mt-3">
                 <button
-                  className="bg-[#E12503] flex gap-2 items-center text-white px-10 py-2 "
+                  className={`bg-[#E12503] flex gap-2 items-center text-white px-10 py-2 ${
+                    quantity <= 0 ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
                   onClick={handleAddToCart}
+                  disabled={quantity <= 0}
                 >
                   Add to Cart
                 </button>

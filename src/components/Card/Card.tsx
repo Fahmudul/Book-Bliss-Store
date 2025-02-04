@@ -2,11 +2,11 @@ import img1 from "/assets/img1.png";
 import { FaShoppingCart } from "react-icons/fa";
 import { FaRegEye } from "react-icons/fa6";
 import { GiSelfLove } from "react-icons/gi";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { IBook } from "../../Types/global";
 
-const Card = ({ book }) => {
+const Card = ({ book }: { book: IBook }) => {
   const { author, title, price, _id } = book;
-  const navigate = useNavigate();
   return (
     <div className="group relative flex justify-center items-center flex-col">
       <div className="relative overflow-hidden">

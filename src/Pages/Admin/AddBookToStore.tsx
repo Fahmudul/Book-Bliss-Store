@@ -5,39 +5,72 @@ import { FieldValues, SubmitHandler } from "react-hook-form";
 import CustomSelect from "../../components/CustomForm/CustomSelect";
 import { CategoryOptions } from "../../Constants/constants";
 import { usePublishBookMutation } from "../../Redux/Features/Admin/UserManagementApi/bookManagement.api";
-
+import { motion } from "framer-motion";
+import { toast } from "sonner";
 const AddBookToStore = () => {
   const [publishBook] = usePublishBookMutation(undefined);
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     console.log(data);
-    const custommizedData = {
-      title: "The Great Gatsby",
-      description: "A story of the Great Gatsby",
-      price: 100,
-      quantity: 10,
-      author: "F. Scott Fitzgerald",
-      category: "Fiction",
-    };
-    const { data: response } = await publishBook(custommizedData);
-    // const { data: response } = await publishBook(data);
-    console.log(response);
+
+    try {
+      const { data: response } = await publishBook(data);
+      const toastId = toast.loading("Publishing your book");
+      console.log(response);
+      if (response?.success) {
+        toast.success("Book Published", { id: toastId });
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
-    <div>
-      <CustomForm onSubmit={onSubmit}>
-        <CustomInput name="title" label="Title" type="text" />
-        <CustomInput name="description" label="Description" type="text" />
-        <CustomInput name="price" label="Price" type="number" />
-        <CustomInput name="quantity" label="quantity" type="number" />
-        <CustomInput name="author" label="Author" type="string" />
-        <CustomSelect
-          name="category"
-          label="Category"
-          options={CategoryOptions}
-        />
-        <Button htmlType="submit">Publish Book</Button>
-      </CustomForm>
-    </div>
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="flex justify-center items-center   p-6"
+    >
+      <motion.div
+        initial={{ scale: 0.9 }}
+        animate={{ scale: 1 }}
+        transition={{ duration: 0.4, ease: "easeInOut" }}
+        className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-md"
+      >
+        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
+          Publish Your Book 📚
+        </h2>
+        <CustomForm onSubmit={onSubmit} className="space-y-6">
+          <CustomInput name="title" placeholderTitle="Title" type="text" />
+          <CustomInput
+            name="description"
+            placeholderTitle="Description"
+            type="text"
+          />
+          <CustomInput name="price" placeholderTitle="Price" type="number" />
+          <CustomInput
+            name="quantity"
+            placeholderTitle="Quantity"
+            type="number"
+          />
+          <CustomInput name="author" placeholderTitle="Author" type="text" />
+          <CustomSelect
+            name="category"
+            label="Category"
+            options={CategoryOptions}
+          />
+
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Button
+              htmlType="submit"
+              className="custom-btn"
+              style={{ width: "100%" }}
+            >
+              Publish Book
+            </Button>
+          </motion.div>
+        </CustomForm>
+      </motion.div>
+    </motion.div>
   );
 };
 

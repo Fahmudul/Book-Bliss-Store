@@ -2,9 +2,9 @@ import { FaXTwitter, FaInstagram, FaPinterestP } from "react-icons/fa6";
 import { CiFacebook } from "react-icons/ci";
 const Footer = () => {
   return (
-    <div className="  h-[390px] bg-cover bg-center bg-no-repeat  flex justify-center items-center w-full mx-auto bg-[url('/assets/Footer.png')]">
+    <div className="bg-cover h-[60%] py-3 md:h-[390px] bg-center bg-no-repeat  flex justify-center items-center w-full mx-auto bg-[url('/assets/Footer.png')]">
       <div className="w-[85%] mx-auto text-white flex flex-col gap-10">
-        <div className="flex gap-8 justify-between">
+        <div className="flex gap-8 justify-between lg:flex-row flex-col items-center md:items-start md:text-start text-center">
           <div>
             <p className="text-2xl font-bold text-red-500/80">BOOK BLISS</p>
             <p>1203 Town Center Dr</p>
@@ -42,7 +42,7 @@ const Footer = () => {
           <CiFacebook className="text-2xl hover:text-red-500 transition-all duration-300" />
         </div>
 
-        <div className="text-center ">
+        <div className="text-center flex flex-col gap-3">
           <hr />
           <span className="p-5">All Right Reserved © 2025 Book Bliss</span>
         </div>

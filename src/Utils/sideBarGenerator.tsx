@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import { TRoutes } from "../Types/global";
 
 const sideBarGenerator = (routes: TRoutes[]) => {
-  const sideBarItems = routes.map((route, idx) => {
+  const sideBarItems = routes.map((route) => {
     if (route.path && route.name) {
       return {
         key: route.path,

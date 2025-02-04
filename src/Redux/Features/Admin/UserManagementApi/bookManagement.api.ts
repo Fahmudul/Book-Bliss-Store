@@ -10,7 +10,7 @@ const bookMangementApi = baseApi.injectEndpoints({
             if (Array.isArray(value)) {
               value.forEach((val) => params.append(key, val));
             } else {
-              params.append(key, value);
+              params.append(key, value as string);
             }
           });
         }
@@ -42,6 +42,12 @@ const bookMangementApi = baseApi.injectEndpoints({
         method: "GET",
       }),
     }),
+    getAuthors: builder.query({
+      query: () => ({
+        url: "/books/authors",
+        method: "GET",
+      }),
+    }),
     deleteABook: builder.mutation({
       query: (params) => ({
         url: `/books/delete-book/${params}`,
@@ -66,6 +72,7 @@ export const {
   useGetSingleBookQuery,
   usePublishBookMutation,
   useGetNumberOfCategoriesQuery,
+  useGetAuthorsQuery,
   useDeleteABookMutation,
   useUpdateBookDataMutation,
 } = bookMangementApi;

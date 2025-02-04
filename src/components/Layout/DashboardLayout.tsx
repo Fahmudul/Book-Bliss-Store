@@ -1,17 +1,18 @@
 import { Outlet } from "react-router-dom";
 import Sidebar from "../Sidebar/Sidebar";
-import { Button, Layout } from "antd";
+import { Layout } from "antd";
 import { Content, Footer, Header } from "antd/es/layout/layout";
-import { useAppDispatch } from "../../Redux/hook";
-import { logOut } from "../../Redux/Features/Auth/authSlice";
+import DasahboardTopBar from "./DasahboardTopBar";
 
 const DashboardLayout = () => {
-  const dispatch = useAppDispatch();
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Sidebar />
-      <Layout>
-        <Header style={{ padding: 0 }} className="bg-black"></Header>
+
+      <Layout className="bg-[#f9fafb]">
+        <Header style={{ padding: 0 }} className="bg-transparent">
+          <DasahboardTopBar />
+        </Header>
         <Content style={{ margin: "24px 16px 0" }}>
           <div
             style={{
