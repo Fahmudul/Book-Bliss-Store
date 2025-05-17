@@ -150,6 +150,8 @@ npm run dev
 - **Wishlist & Favorites**
 - **More Payment Options**
 
+- Credentials: admin: admin@gmail.com, Password: 123456
+
 ---
 
 ## 👨‍💻 Contributors
